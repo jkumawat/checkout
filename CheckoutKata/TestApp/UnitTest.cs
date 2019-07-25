@@ -29,13 +29,30 @@ namespace Tests
             pricePerItem.PricePerProduct.Add(Products.Peach, 60);            
         }
 
+        /// <summary>
+        /// Test to see if the calculation performed on items with applying weekly offer.
+        /// </summary>
+        /// <param name="appleCount">No. of Apple Added in the Shopping Cart </param>
+        /// <param name="bananaCount">No. of Banana Added in the Shopping Cart </param>
+        /// <param name="peachCount">No. of Peach Added in the Shopping Cart </param>
         [TestCase(3,4,1)]
         [Test]
         public void TestWithOfferApplied(long appleCount, long bananaCount, long peachCount)
         {
-            shoppingCart= CheckoutKataHelper.AddItemInShoppingCart(appleCount, shoppingCart);
-            shoppingCart = CheckoutKataHelper.AddItemInShoppingCart(bananaCount, shoppingCart);
-            shoppingCart = CheckoutKataHelper.AddItemInShoppingCart(peachCount, shoppingCart);
+            for (int i = 1; i <= appleCount; i++)
+            {
+                    shoppingCart = CheckoutKataHelper.AddItemInShoppingCart(1, shoppingCart);             
+            }
+
+            for (int i = 1; i <= bananaCount; i++)
+            {
+                shoppingCart = CheckoutKataHelper.AddItemInShoppingCart(2, shoppingCart);
+            }
+
+            for (int i = 1; i <= peachCount; i++)
+            {              
+                    shoppingCart = CheckoutKataHelper.AddItemInShoppingCart(3, shoppingCart);
+            }
 
             Bill invoice= CheckoutKataHelper.GenerateBill(shoppingCart.cart, offer, pricePerItem);
 
@@ -46,13 +63,31 @@ namespace Tests
             Assert.AreEqual(315, invoice.PayableAmount());
         }
 
+        /// <summary>
+        /// Test to see if the calculation performed on items with applying weekly offer. 
+        /// Should fail as value we put should not be same.
+        /// </summary>
+        /// <param name="appleCount">No. of Apple Added in the Shopping Cart </param>
+        /// <param name="bananaCount">No. of Banana Added in the Shopping Cart </param>
+        /// <param name="peachCount">No. of Peach Added in the Shopping Cart </param>
         [TestCase(3, 4, 1)]
         [Test]
         public void TestWithOfferAppliedFailed(long appleCount, long bananaCount, long peachCount)
         {
-            shoppingCart = CheckoutKataHelper.AddItemInShoppingCart(appleCount, shoppingCart);
-            shoppingCart = CheckoutKataHelper.AddItemInShoppingCart(bananaCount, shoppingCart);
-            shoppingCart = CheckoutKataHelper.AddItemInShoppingCart(peachCount, shoppingCart);
+            for (int i = 1; i <= appleCount; i++)
+            {
+                shoppingCart = CheckoutKataHelper.AddItemInShoppingCart(1, shoppingCart);
+            }
+
+            for (int i = 1; i <= bananaCount; i++)
+            {
+                shoppingCart = CheckoutKataHelper.AddItemInShoppingCart(2, shoppingCart);
+            }
+
+            for (int i = 1; i <= peachCount; i++)
+            {
+                shoppingCart = CheckoutKataHelper.AddItemInShoppingCart(3, shoppingCart);
+            }
 
             Bill invoice = CheckoutKataHelper.GenerateBill(shoppingCart.cart, offer, pricePerItem);
 
@@ -63,13 +98,31 @@ namespace Tests
             Assert.AreNotEqual(100, invoice.PayableAmount());
         }
 
+        /// <summary>
+        /// Test to see if the calculation performed on items without applying weekly offer.
+        /// </summary>
+        /// <param name="appleCount">No. of Apple Added in the Shopping Cart </param>
+        /// <param name="bananaCount">No. of Banana Added in the Shopping Cart </param>
+        /// <param name="peachCount">No. of Peach Added in the Shopping Cart </param>
         [TestCase(1, 2, 3)]
         [Test]
         public void TestWithoutAnyOffer(long appleCount, long bananaCount, long peachCount)
         {
-            shoppingCart = CheckoutKataHelper.AddItemInShoppingCart(appleCount, shoppingCart);
-            shoppingCart = CheckoutKataHelper.AddItemInShoppingCart(bananaCount, shoppingCart);
-            shoppingCart = CheckoutKataHelper.AddItemInShoppingCart(peachCount, shoppingCart);
+            for (int i = 1; i <= appleCount; i++)
+            {
+                shoppingCart = CheckoutKataHelper.AddItemInShoppingCart(1, shoppingCart);
+            }
+
+            for (int i = 1; i <= bananaCount; i++)
+            {
+                shoppingCart = CheckoutKataHelper.AddItemInShoppingCart(2, shoppingCart);
+            }
+
+            for (int i = 1; i <= peachCount; i++)
+            {
+                shoppingCart = CheckoutKataHelper.AddItemInShoppingCart(3, shoppingCart);
+            }
+
 
             Bill invoice = CheckoutKataHelper.GenerateBill(shoppingCart.cart, offer, pricePerItem);
 

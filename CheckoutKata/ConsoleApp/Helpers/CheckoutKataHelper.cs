@@ -81,6 +81,39 @@ namespace ConsoleApp.Helpers
         }
 
         /// <summary>
+        /// Print Generate Bill
+        /// </summary>
+        /// <param name="customerBill"></param>
+        public static void PrintBill(Bill customerBill)
+        {
+            Console.WriteLine("\n\n");
+            Console.WriteLine("\n\n");
+
+            Console.WriteLine("==========================");
+            Console.WriteLine("Generate System Invoice");
+            Console.WriteLine("==========================");
+
+            customerBill.Products.ForEach(item => {
+                StringBuilder strBuild = new StringBuilder();
+
+                strBuild.Append(item.Product);
+                strBuild.Append(" --- ");
+                strBuild.Append("Sale (" + String.Join(',', item.ItemsWithOfferedPrice.Keys) + ")");
+                strBuild.Append("---");
+                strBuild.Append(String.Join(',', item.ItemsWithPrice.Keys));
+                strBuild.Append("---");
+                strBuild.Append(String.Join(',', item.TotalPrice()));
+
+
+                Console.WriteLine(strBuild.ToString());
+            });
+
+            Console.WriteLine("------------------------------------------------");
+            Console.WriteLine("Payable Amount ==> " + customerBill.PayableAmount());
+            Console.WriteLine("------------------------------------------------");
+        }
+
+        /// <summary>
         /// Generate Message for User to know the possible values he can enter.
         /// </summary>
         /// <returns></returns>
@@ -117,6 +150,13 @@ namespace ConsoleApp.Helpers
             }
 
             return result;
+        }
+
+        public static bool ValidateInputString(string input)
+        {
+            int result;
+
+            return int.TryParse(input, out result) && (result == 0 || Enum.IsDefined(typeof(Products), result));
         }
     }
 }
