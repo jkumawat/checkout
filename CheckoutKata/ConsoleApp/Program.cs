@@ -50,7 +50,7 @@ namespace ConsoleApp
             Bill custBill = CheckoutKataHelper.GenerateBill(shoppingBucket.cart, offer, pricePerItem);
 
             //Print bill.
-            CheckoutKataHelper.PrintBill(custBill);
+            CheckoutKataHelper.PrintBill(custBill, offer, pricePerItem);
         }
     }
 }

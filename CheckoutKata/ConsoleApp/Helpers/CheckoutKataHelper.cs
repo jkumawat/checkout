@@ -64,6 +64,7 @@ namespace ConsoleApp.Helpers
                     }
                 });
 
+                // check without offer items and apply rate.
                 long howManyWithoutOfferedPrice = productCountInBucket - billItem.ItemsWithOfferedPrice.Keys.Sum();
 
                 if (howManyWithoutOfferedPrice > 0)
@@ -76,7 +77,6 @@ namespace ConsoleApp.Helpers
             }
 
             custBill.Products = billedItems;
-
             return custBill;
         }
 
@@ -84,7 +84,7 @@ namespace ConsoleApp.Helpers
         /// Print Generate Bill
         /// </summary>
         /// <param name="customerBill"></param>
-        public static void PrintBill(Bill customerBill)
+        public static void PrintBill(Bill customerBill, WeeklyOffer offer, PricePerItem ppp)
         {
             Console.WriteLine("\n\n");
             Console.WriteLine("\n\n");
@@ -93,14 +93,45 @@ namespace ConsoleApp.Helpers
             Console.WriteLine("Generate System Invoice");
             Console.WriteLine("==========================");
 
-            customerBill.Products.ForEach(item => {
-                StringBuilder strBuild = new StringBuilder();
+            Console.WriteLine("Prodcut name --- Offer Applied on --- Normal rate --- Total");
+            Console.WriteLine("-----------------------------------------------------------");
 
+            customerBill.Products.ForEach(item => {
+
+                Dictionary<long, double> offeredPriceForItem = offer.Offer.FirstOrDefault(kvp => kvp.Key == item.Product).Value;
+
+                StringBuilder strBuild = new StringBuilder();
+                
                 strBuild.Append(item.Product);
                 strBuild.Append(" --- ");
-                strBuild.Append("Sale (" + String.Join(',', item.ItemsWithOfferedPrice.Keys) + ")");
-                strBuild.Append("---");
-                strBuild.Append(String.Join(',', item.ItemsWithPrice.Keys));
+
+                //check if offered prices are applied on the items
+                if (item.ItemsWithOfferedPrice != null && item.ItemsWithOfferedPrice.Keys.Count > 0) {
+                    offeredPriceForItem?.Keys?.OrderByDescending(v => v).ToList().ForEach(key => {
+
+                        item.ItemsWithOfferedPrice.Keys.ToList().ForEach(offeredItem => {
+                            if (offeredItem % key == 0)
+                            {
+                                strBuild.Append(key * (offeredItem / key) + " ( " + offeredItem / key + " X " + offeredPriceForItem[key]+ " )");
+                                strBuild.Append("---");
+                            }
+                        });
+                    });
+                }
+                else {
+                    strBuild.Append("0 X 0");
+                    strBuild.Append("---");
+                }
+
+                //check if normal prices are applied on the items
+                if (item.ItemsWithPrice != null && item.ItemsWithPrice.Count > 0) {
+                    strBuild.Append(String.Join(',', item.ItemsWithPrice.Keys) + " X " + ppp.PricePerProduct[item.Product].ToString());
+                }
+                else {
+                    strBuild.Append( "0  X " + ppp.PricePerProduct[item.Product].ToString());
+                }
+
+                
                 strBuild.Append("---");
                 strBuild.Append(String.Join(',', item.TotalPrice()));
 
