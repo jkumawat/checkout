@@ -12,4 +12,10 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="ConsoleApp">
+      <HintPath>..\ConsoleApp\bin\Debug\netcoreapp2.2\ConsoleApp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
